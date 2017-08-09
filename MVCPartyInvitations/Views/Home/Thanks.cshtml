@@ -1,0 +1,45 @@
+﻿@model MVCPartyInvitations.Models.GuestResponse
+
+@{
+    ViewBag.Title = "Thanks";
+}
+
+<style>
+    body {
+        background-color: dodgerblue;
+    }
+</style>
+
+@{ 
+    try
+    {
+
+        WebMail.SmtpServer = "smtp.sina.com";// "smtp.gmail.com";
+        WebMail.SmtpPort = 25;// 587;
+        WebMail.EnableSsl = false; // true;
+        WebMail.UserName = "lgz1009@sina.com";
+        WebMail.Password = Model.Password;
+        WebMail.From = "lgz1009@sina.com";
+        WebMail.Send(Model.Email, "RSVP Notification",
+            Model.Name + " is " + ((Model.WillAttend ?? false) ? "" : "not")
+            + " attending");
+    }
+    catch(Exception)
+    {
+        <b>Sorry - we couldn't send the email to confirm your RSVP</b>
+    }
+}
+<div class="text-center">
+    <h2>Thank you, @Model.Name</h2>
+
+    <div class="lead">
+        @if (Model.WillAttend == true)
+        {
+            @:It's great that you're coming!
+        }
+        else
+        {
+            @:Sorry to hear that you can't make it, but thanks for letting us know.
+        }
+    </div>
+</div>
